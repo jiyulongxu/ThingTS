@@ -1,16 +1,17 @@
 import { BaseObject } from '../base-object/BaseObject';
 import { Selector } from '../query/Selector';
+import { App } from '../core-object/App';
 
 /*
  * @Author: kekeqy
  * @Date: 2018-12-10 14:55:14
  * @LastEditors: kekeqy
- * @LastEditTime: 2018-12-10 15:02:07
+ * @LastEditTime: 2019-01-14 16:46:15
  * @Description: 建筑
  */
 export class Building extends BaseObject {
-    public constructor() {
-        super();
+    public constructor(app: App) {
+        super(app);
         throw new Error('未实现！');
     }
 

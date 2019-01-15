@@ -2,8 +2,13 @@ import { Selector } from '../query/Selector';
 import { BaseStyle } from '../effect/BaseStyle';
 import { CameraController } from '../camera/CameraController';
 import { LerpType } from '../other/LerpType';
+import { App } from '../core-object/App';
+import { Object3D } from 'three';
 export declare class BaseObject {
-    constructor();
+    readonly app: App;
+    readonly node: Object3D;
+    private _parent;
+    constructor(app: App, node?: Object3D, parent?: BaseObject);
     /**
      * 添加子物体
      * @param {BaseObject|*} params 物体或者参数列表

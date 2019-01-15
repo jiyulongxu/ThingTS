@@ -1,6 +1,7 @@
 import { BaseObject } from '../base-object/BaseObject';
+import { App } from '../core-object/App';
 export declare class GeoBuilding extends BaseObject {
-    constructor(options: {
+    constructor(app: App, options: {
         /**
          * 类型'GeoBuilding'
          */

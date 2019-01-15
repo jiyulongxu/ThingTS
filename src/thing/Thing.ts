@@ -1,17 +1,18 @@
 import { BaseObject } from '../base-object/BaseObject';
 import { Floor } from '../building/Floor';
 import { Building } from '../building/Building';
+import { App } from '../core-object/App';
 
 /*
  * @Author: kekeqy
  * @Date: 2018-12-10 14:23:25
  * @LastEditors: kekeqy
- * @LastEditTime: 2018-12-10 17:54:25
+ * @LastEditTime: 2019-01-14 16:48:13
  * @Description: 物体
  */
 export class Thing extends BaseObject {
-    public constructor() {
-        super();
+    public constructor(app: App) {
+        super(app);
         throw new Error('未实现！');
     }
 

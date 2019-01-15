@@ -1,7 +1,8 @@
 import { BaseObject } from '../base-object/BaseObject';
 import { Selector } from '../query/Selector';
+import { App } from '../core-object/App';
 export declare class Building extends BaseObject {
-    constructor();
+    constructor(app: App);
     /**
      * 是否拥有外立面
      * @return {Boolean} 是否拥有外立面

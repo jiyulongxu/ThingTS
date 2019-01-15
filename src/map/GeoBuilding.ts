@@ -1,14 +1,15 @@
 import { BaseObject } from '../base-object/BaseObject';
+import { App } from '../core-object/App';
 
 /*
  * @Author: kekeqy
  * @Date: 2018-12-11 14:27:05
  * @LastEditors: kekeqy
- * @LastEditTime: 2018-12-11 14:33:09
+ * @LastEditTime: 2019-01-14 16:55:01
  * @Description: 根据底面和高度拔起的体
  */
 export class GeoBuilding extends BaseObject {
-    public constructor(options: {
+    public constructor(app: App, options: {
         /**
          * 类型'GeoBuilding'
          */
@@ -38,7 +39,7 @@ export class GeoBuilding extends BaseObject {
          */
         combine: Object
     }) {
-        super();
+        super(app);
         throw new Error('未实现！');
     }
 

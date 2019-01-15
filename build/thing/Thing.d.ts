@@ -1,8 +1,9 @@
 import { BaseObject } from '../base-object/BaseObject';
 import { Floor } from '../building/Floor';
 import { Building } from '../building/Building';
+import { App } from '../core-object/App';
 export declare class Thing extends BaseObject {
-    constructor();
+    constructor(app: App);
     /**
      * 获取动画
      * @type {Array}

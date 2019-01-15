@@ -1,7 +1,8 @@
 import { BaseObject } from '../base-object/BaseObject';
 import { Selector } from '../query/Selector';
+import { App } from '../core-object/App';
 export declare class Campus extends BaseObject {
-    constructor();
+    constructor(app: App);
     /**
      * 获取场景加载数据
      * @type {Object}

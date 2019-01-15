@@ -1,16 +1,17 @@
 import { LineBase } from '../base-object/LineBase';
+import { App } from '../core-object/App';
 
 /*
  * @Author: kekeqy
  * @Date: 2018-12-10 14:40:08
  * @LastEditors: kekeqy
- * @LastEditTime: 2018-12-10 14:41:50
+ * @LastEditTime: 2019-01-14 16:49:34
  * @Description: 管线
  */
 
 export class PolygonLine extends LineBase {
-    public constructor() {
-        super();
+    public constructor(app: App) {
+        super(app);
         throw new Error('未实现！');
     }
 

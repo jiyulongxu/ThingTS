@@ -1,17 +1,18 @@
 import { BaseObject } from '../base-object/BaseObject';
 import { Campus } from '../building/Campus';
 import { Selector } from '../query/Selector';
+import { App } from '../core-object/App';
 
 /*
  * @Author: kekeqy
  * @Date: 2018-12-10 15:47:33
  * @LastEditors: kekeqy
- * @LastEditTime: 2018-12-11 13:19:30
+ * @LastEditTime: 2019-01-14 16:58:01
  * @Description: 场景根节点
  */
 export class SceneRoot extends BaseObject {
-    public constructor() {
-        super();
+    public constructor(app: App) {
+        super(app);
         throw new Error('未实现！');
     }
 

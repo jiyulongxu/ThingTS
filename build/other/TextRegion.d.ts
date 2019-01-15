@@ -1,6 +1,7 @@
 import { BaseObject } from '../base-object/BaseObject';
+import { App } from '../core-object/App';
 export declare class TextRegion extends BaseObject {
-    constructor();
+    constructor(app: App);
     /**
      * 设置文本
      * @type {String}

@@ -4,16 +4,17 @@ import { BaseLayerCollection } from './BaseLayerCollection';
 import { TerrainLayer } from './TerrainLayer';
 import { UserLayerCollection } from './UserLayerCollection';
 import { Util } from './Util';
+import { App } from '../core-object/App';
 
 /*
  * @Author: kekeqy
  * @Date: 2018-12-11 14:38:05
  * @LastEditors: kekeqy
- * @LastEditTime: 2018-12-11 14:59:13
+ * @LastEditTime: 2019-01-14 16:55:57
  * @Description: 地球组件创建入口
  */
 export class Map extends BaseObject {
-    public constructor(options: {
+    public constructor(app: App, options: {
         /**
          * 类型'Map'
          */
@@ -31,7 +32,7 @@ export class Map extends BaseObject {
          */
         style: string
     }) {
-        super();
+        super(app);
         throw new Error('未实现！');
     }
 

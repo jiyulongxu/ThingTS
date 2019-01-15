@@ -1,6 +1,7 @@
 import { BaseObject } from './BaseObject';
+import { App } from '../core-object/App';
 export declare class PointsBase extends BaseObject {
-    constructor();
+    constructor(app: App);
     /**
      * 清除所有节点
      */

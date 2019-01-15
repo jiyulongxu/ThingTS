@@ -2,17 +2,24 @@ import { Selector } from '../query/Selector';
 import { BaseStyle } from '../effect/BaseStyle';
 import { CameraController } from '../camera/CameraController';
 import { LerpType } from '../other/LerpType';
+import { App } from '../core-object/App';
+import { Object3D } from 'three';
 
 /*
  * @Author: kekeqy
  * @Date: 2018-12-10 12:42:00
  * @LastEditors: kekeqy
- * @LastEditTime: 2018-12-17 13:02:26
+ * @LastEditTime: 2019-01-14 16:41:54
  * @Description: 基础物体类型
  */
 export class BaseObject {
-    public constructor() {
-        throw new Error('未实现！');
+    public readonly app: App;
+    public readonly node: Object3D;
+    private _parent: BaseObject;
+    public constructor(app: App, node: Object3D = null, parent: BaseObject = null) {
+        this.app = app;
+        this.node = node;
+        this._parent = parent;
     }
 
     /**
@@ -704,7 +711,7 @@ export class BaseObject {
      * @type {BaseObject}
      */
     public get parent(): BaseObject {
-        throw new Error('未实现！');
+        return this._parent;
     }
 
     /**

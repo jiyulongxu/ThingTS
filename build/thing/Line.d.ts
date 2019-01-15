@@ -1,6 +1,7 @@
 import { BaseObject } from '../base-object/BaseObject';
+import { App } from '../core-object/App';
 export declare class Line extends BaseObject {
-    constructor();
+    constructor(app: App);
     /**
      * 序列化
      * @return {Object} JSON 数据

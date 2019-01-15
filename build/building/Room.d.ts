@@ -1,8 +1,9 @@
 import { BaseObject } from '../base-object/BaseObject';
 import { Floor } from './Floor';
 import { Selector } from '../query/Selector';
+import { App } from '../core-object/App';
 export declare class Room extends BaseObject {
-    constructor();
+    constructor(app: App);
     /**
      * 获取物体可使用的世界坐标位置
      * @param {Number|Array<Array<Number>>} number 物体总数|申请的位置大小[[width, height]]

@@ -1,15 +1,16 @@
 import { LightBase } from './LightBase';
+import { App } from '../core-object/App';
 
 /*
  * @Author: kekeqy
  * @Date: 2018-12-10 16:25:36
  * @LastEditors: kekeqy
- * @LastEditTime: 2018-12-10 16:27:46
+ * @LastEditTime: 2019-01-14 16:53:23
  * @Description: 聚光灯
  */
 export class SpotLight extends LightBase {
-    public constructor() {
-        super();
+    public constructor(app: App) {
+        super(app);
         throw new Error('未实现！');
     }
 

@@ -1,6 +1,7 @@
 import { BaseObject } from '../base-object/BaseObject';
+import { App } from '../core-object/App';
 export declare class Marker extends BaseObject {
-    constructor();
+    constructor(app: App);
     /**
      * 初始化连接线
      */

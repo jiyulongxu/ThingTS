@@ -1,14 +1,15 @@
 import { BaseObject } from '../base-object/BaseObject';
+import { App } from '../core-object/App';
 
 /*
  * @Author: kekeqy
  * @Date: 2018-12-11 15:17:50
  * @LastEditors: kekeqy
- * @LastEditTime: 2018-12-11 15:24:22
+ * @LastEditTime: 2019-01-14 16:57:04
  * @Description: 瓦片图层类
  */
 export class TileLayer extends BaseObject {
-    public constructor(param: {
+    public constructor(app: App, param: {
         /**
          * 瓦片图层name
          */
@@ -35,7 +36,7 @@ export class TileLayer extends BaseObject {
             brightness: number
         }
     }) {
-        super();
+        super(app);
         throw new Error('未实现！');
     }
 }

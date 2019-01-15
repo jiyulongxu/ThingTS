@@ -1,14 +1,15 @@
 import { BaseObject } from '../base-object/BaseObject';
+import { App } from '../core-object/App';
 
 /*
  * @Author: kekeqy
  * @Date: 2018-12-11 15:00:07
  * @LastEditors: kekeqy
- * @LastEditTime: 2018-12-11 15:09:12
+ * @LastEditTime: 2019-01-14 16:56:34
  * @Description: 基础Layer能够添加各种对象
  */
 export class ThingLayer extends BaseObject {
-    public constructor(param: {
+    public constructor(app: App, param: {
         /**
          * 名称
          */
@@ -18,7 +19,7 @@ export class ThingLayer extends BaseObject {
          */
         order: number
     }) {
-        super();
+        super(app);
         throw new Error('未实现！');
     }
 

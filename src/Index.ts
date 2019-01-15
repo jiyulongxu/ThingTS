@@ -2,9 +2,13 @@
  * @Author: kekeqy
  * @Date: 2018-12-07 14:05:14
  * @LastEditors: kekeqy
- * @LastEditTime: 2019-01-09 18:22:50
+ * @LastEditTime: 2019-01-11 17:51:07
  * @Description: 模块导出类
  */
+
+
+import './three/Index';//对three.js类库的扩展
+
 
 export { BaseObject } from './base-object/BaseObject';
 export { BaseStyle } from './effect/BaseStyle';

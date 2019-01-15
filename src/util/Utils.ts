@@ -1,8 +1,10 @@
+import { Matrix4 } from 'three';
+
 /*
  * @Author: kekeqy
  * @Date: 2018-12-10 17:04:12
  * @LastEditors: kekeqy
- * @LastEditTime: 2018-12-10 17:07:16
+ * @LastEditTime: 2019-01-15 11:20:05
  * @Description: 描述
  */
 export class Utils {
@@ -13,7 +15,7 @@ export class Utils {
      * @return {boolean}
      */
     public static isBoolean(value: any): boolean {
-        throw new Error('未实现！');
+        return typeof value === 'boolean';
     }
 
     /**
@@ -29,51 +31,51 @@ export class Utils {
     /**
      * 判断是否空
      * @memberof THING.Utils
-     * @param {*} o js元素
+     * @param {*} value js元素
      * @return {boolean}
      */
-    public static isNull(o: any): boolean {
-        throw new Error('未实现！');
+    public static isNull(value: any): boolean {
+        return value === undefined || value == null;
     }
 
     /**
      * 判断是否空白字符串
      * @memberof THING.Utils
-     * @param {*} o js元素
+     * @param {*} value js元素
      * @return {boolean}
      */
-    public static isBlank(o: any): boolean {
+    public static isBlank(value: any): boolean {
         throw new Error('未实现！');
     }
 
     /**
      * 判断是否空结构体
      * @memberof THING.Utils
-     * @param {*} o js元素
+     * @param {*} value js元素
      * @return {boolean}
      */
-    public static isEmptyObj(o: any): boolean {
-        throw new Error('未实现！');
+    public static isEmptyObj(value: any): boolean {
+        return JSON.stringify(value) === '{}';
     }
 
     /**
      * 判断是否空数组
      * @memberof THING.Utils
-     * @param {*} o js元素
+     * @param {*} value js元素
      * @return {boolean}
      */
-    public static isEmptyArray(o: any): boolean {
+    public static isEmptyArray(value: any): boolean {
         throw new Error('未实现！');
     }
 
     /**
      * 字符串转成小写
      * @memberof THING.Utils
-     * @param {string} s 字符串
+     * @param {string} value 字符串
      * @return {string}
      */
-    public static toLowerCase(s: string): string {
-        throw new Error('未实现！');
+    public static toLowerCase(value: string): string {
+        return value ? value.toLowerCase() : '';
     }
 
     /**
@@ -197,5 +199,76 @@ export class Utils {
     public static runAsync(callback: () => any): void {
         throw new Error('未实现！');
     }
-
+    public static toMatrixElementsArray(martix: Matrix4): {
+        _00: number,
+        _01: number,
+        _02: number,
+        _03: number,
+        _10: number,
+        _11: number,
+        _12: number,
+        _13: number,
+        _20: number,
+        _21: number,
+        _22: number,
+        _23: number,
+        _30: number,
+        _31: number,
+        _32: number,
+        _33: number
+    } {
+        return {
+            _00: martix.elements[0],
+            _01: martix.elements[1],
+            _02: martix.elements[2],
+            _03: martix.elements[3],
+            _10: martix.elements[4],
+            _11: martix.elements[5],
+            _12: martix.elements[6],
+            _13: martix.elements[7],
+            _20: martix.elements[8],
+            _21: martix.elements[9],
+            _22: martix.elements[10],
+            _23: martix.elements[11],
+            _30: martix.elements[12],
+            _31: martix.elements[13],
+            _32: martix.elements[14],
+            _33: martix.elements[15]
+        }
+    }
+    public static elementsArrayToMatrix(martix: Matrix4, o: {
+        _00: number,
+        _01: number,
+        _02: number,
+        _03: number,
+        _10: number,
+        _11: number,
+        _12: number,
+        _13: number,
+        _20: number,
+        _21: number,
+        _22: number,
+        _23: number,
+        _30: number,
+        _31: number,
+        _32: number,
+        _33: number
+    }): void {
+        martix.elements[0] = o._00;
+        martix.elements[1] = o._01;
+        martix.elements[2] = o._02;
+        martix.elements[3] = o._03;
+        martix.elements[4] = o._10;
+        martix.elements[5] = o._11;
+        martix.elements[6] = o._12;
+        martix.elements[7] = o._13;
+        martix.elements[8] = o._20;
+        martix.elements[9] = o._21;
+        martix.elements[10] = o._22;
+        martix.elements[11] = o._23;
+        martix.elements[12] = o._30;
+        martix.elements[13] = o._31;
+        martix.elements[14] = o._32;
+        martix.elements[15] = o._33;
+    }
 }

@@ -1,14 +1,15 @@
 import { BaseObject } from '../base-object/BaseObject';
+import { App } from '../core-object/App';
 
 /*
  * @Author: kekeqy
  * @Date: 2018-12-11 15:09:42
  * @LastEditors: kekeqy
- * @LastEditTime: 2018-12-11 15:12:36
+ * @LastEditTime: 2019-01-14 16:57:31
  * @Description: 倾斜摄影图层类
  */
 export class Tile3dLayer extends BaseObject {
-    public constructor(param: {
+    public constructor(app: App, param: {
         /**
          * 倾斜摄影图层名称
          */
@@ -22,7 +23,7 @@ export class Tile3dLayer extends BaseObject {
          */
         height: Number
     }) {
-        super();
+        super(app);
         throw new Error('未实现！');
     }
 }

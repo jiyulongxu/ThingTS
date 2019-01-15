@@ -1,6 +1,7 @@
 import { LightBase } from './LightBase';
+import { App } from '../core-object/App';
 export declare class SpotLight extends LightBase {
-    constructor();
+    constructor(app: App);
     /**
      * 设置灯光角度
      * @type {Number} value 角度

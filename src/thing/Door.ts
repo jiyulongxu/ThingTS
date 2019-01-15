@@ -1,16 +1,17 @@
 import { Thing } from './Thing';
 import { Floor } from '../building/Floor';
+import { App } from '../core-object/App';
 
 /*
  * @Author: kekeqy
  * @Date: 2018-12-11 12:27:54
  * @LastEditors: kekeqy
- * @LastEditTime: 2018-12-11 12:29:47
+ * @LastEditTime: 2019-01-14 16:50:41
  * @Description: 门
  */
 export class Door extends Thing {
-    public constructor() {
-        super();
+    public constructor(app: App) {
+        super(app);
         throw new Error('未实现！');
     }
 

@@ -1,15 +1,16 @@
 import { PointsBase } from './PointsBase';
+import { App } from '../core-object/App';
 
 /*
  * @Author: kekeqy
  * @Date: 2018-12-10 14:14:56
  * @LastEditors: kekeqy
- * @LastEditTime: 2018-12-10 14:29:02
+ * @LastEditTime: 2019-01-14 16:46:56
  * @Description: 线段基类
  */
 export class LineBase extends PointsBase {
-    public constructor() {
-        super();
+    public constructor(app: App) {
+        super(app);
         throw new Error('未实现！');
     }
 

@@ -1,15 +1,16 @@
 import { LineBase } from '../base-object/LineBase';
+import { App } from '../core-object/App';
 
 /*
  * @Author: kekeqy
  * @Date: 2018-12-10 14:48:36
  * @LastEditors: kekeqy
- * @LastEditTime: 2018-12-10 18:03:19
+ * @LastEditTime: 2019-01-14 16:49:22
  * @Description: 路线
  */
 export class RouteLine extends LineBase {
-    public constructor() {
-        super();
+    public constructor(app: App) {
+        super(app);
         throw new Error('未实现！');
     }
 

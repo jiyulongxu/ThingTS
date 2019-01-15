@@ -1,16 +1,17 @@
 import { BaseObject } from './BaseObject';
+import { App } from '../core-object/App';
 
 /*
  * @Author: kekeqy
  * @Date: 2018-12-10 14:07:59
  * @LastEditors: kekeqy
- * @LastEditTime: 2018-12-10 14:14:14
+ * @LastEditTime: 2019-01-14 16:46:35
  * @Description: 此类可以用作各种带顶点编辑属性的模型，比如区域和水面的顶点编辑，主要封装了对顶点（编辑点）的操作行为，包括添加、删除，获取等。
  * @Description: 如果想使用这个类的特性，直接从此类派生即可，详细的写法可以参看Water类或者Region类的写法。
  */
 export class PointsBase extends BaseObject {
-    public constructor() {
-        super();
+    public constructor(app: App) {
+        super(app);
         throw new Error('未实现！');
     }
 

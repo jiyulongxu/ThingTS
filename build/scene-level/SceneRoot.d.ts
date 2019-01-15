@@ -1,8 +1,9 @@
 import { BaseObject } from '../base-object/BaseObject';
 import { Campus } from '../building/Campus';
 import { Selector } from '../query/Selector';
+import { App } from '../core-object/App';
 export declare class SceneRoot extends BaseObject {
-    constructor();
+    constructor(app: App);
     /**
      * 显示/隐藏场景
      * @type {boolean}

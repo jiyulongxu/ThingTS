@@ -1,17 +1,18 @@
 import { BaseObject } from '../base-object/BaseObject';
 import { Floor } from './Floor';
 import { Selector } from '../query/Selector';
+import { App } from '../core-object/App';
 
 /*
  * @Author: kekeqy
  * @Date: 2018-12-10 15:34:54
  * @LastEditors: kekeqy
- * @LastEditTime: 2018-12-10 15:39:16
+ * @LastEditTime: 2019-01-14 16:47:39
  * @Description: 描述
  */
 export class Room extends BaseObject {
-    public constructor() {
-        super();
+    public constructor(app: App) {
+        super(app);
         throw new Error('未实现！');
     }
 

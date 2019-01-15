@@ -1,10 +1,11 @@
 import { BaseObject } from '../base-object/BaseObject';
+import { App } from '../core-object/App';
 
 /*
  * @Author: kekeqy
  * @Date: 2018-12-10 16:06:32
  * @LastEditors: kekeqy
- * @LastEditTime: 2018-12-10 16:15:04
+ * @LastEditTime: 2019-01-14 16:52:44
  * @Description: 3D场景内的标记，往往用于顶牌，可以传入div, image或canvas写文字，可以拾取、跟随物体、和物体一并删除
  * var marker = app.create({
  *      type: "Marker",
@@ -15,8 +16,8 @@ import { BaseObject } from '../base-object/BaseObject';
  * });
  */
 export class Marker extends BaseObject {
-    public constructor() {
-        super();
+    public constructor(app: App) {
+        super(app);
         throw new Error('未实现！');
     }
 

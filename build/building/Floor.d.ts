@@ -2,8 +2,9 @@ import { BaseObject } from '../base-object/BaseObject';
 import { Selector } from '../query/Selector';
 import { Building } from './Building';
 import { Room } from './Room';
+import { App } from '../core-object/App';
 export declare class Floor extends BaseObject {
-    constructor();
+    constructor(app: App);
     /**
      * 显示/隐藏屋顶
      * @param {Boolean} visible 显示/隐藏屋顶

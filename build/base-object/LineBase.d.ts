@@ -1,6 +1,7 @@
 import { PointsBase } from './PointsBase';
+import { App } from '../core-object/App';
 export declare class LineBase extends PointsBase {
-    constructor();
+    constructor(app: App);
     /**
      * 开始播放路线动画
      * @param {Number} speed 播放速度

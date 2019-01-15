@@ -1,6 +1,7 @@
 import { LineBase } from '../base-object/LineBase';
+import { App } from '../core-object/App';
 export declare class RouteLine extends LineBase {
-    constructor();
+    constructor(app: App);
     /**
      * 设置宽度
      * @type {number}

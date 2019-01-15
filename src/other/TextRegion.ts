@@ -1,15 +1,16 @@
 import { BaseObject } from '../base-object/BaseObject';
+import { App } from '../core-object/App';
 
 /*
  * @Author: kekeqy
  * @Date: 2018-12-11 12:33:55
  * @LastEditors: kekeqy
- * @LastEditTime: 2018-12-11 12:36:20
+ * @LastEditTime: 2019-01-14 16:58:24
  * @Description: 负责区域文本绘制
  */
 export class TextRegion extends BaseObject {
-    public constructor() {
-        super();
+    public constructor(app: App) {
+        super(app);
         throw new Error('未实现！');
     }
 

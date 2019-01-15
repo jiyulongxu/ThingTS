@@ -4,8 +4,9 @@ import { BaseLayerCollection } from './BaseLayerCollection';
 import { TerrainLayer } from './TerrainLayer';
 import { UserLayerCollection } from './UserLayerCollection';
 import { Util } from './Util';
+import { App } from '../core-object/App';
 export declare class Map extends BaseObject {
-    constructor(options: {
+    constructor(app: App, options: {
         /**
          * 类型'Map'
          */

@@ -1,14 +1,15 @@
 import { BaseObject } from '../base-object/BaseObject';
+import { App } from '../core-object/App';
 
 /*
  * @Author: kekeqy
  * @Date: 2018-12-11 14:34:16
  * @LastEditors: kekeqy
- * @LastEditTime: 2018-12-11 14:37:06
+ * @LastEditTime: 2019-01-14 16:55:23
  * @Description: 地理线
  */
 export class GeoLine extends BaseObject {
-    public constructor(option: {
+    public constructor(app: App, option: {
         /**
          * 类型'GeoLine'
          */
@@ -30,7 +31,7 @@ export class GeoLine extends BaseObject {
          */
         renderer: string
     }) {
-        super();
+        super(app);
         throw new Error('未实现！');
     }
 }

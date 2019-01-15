@@ -51999,21 +51999,55 @@ TWEEN.Interpolation = {
 
 (function(l, i, v, e) { v = l.createElement(i); v.async = 1; v.src = '//' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1'; e = l.getElementsByTagName(i)[0]; e.parentNode.insertBefore(v, e)})(document, 'script');
 (function (global, factory) {
-    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@tweenjs/tween.js'), require('three')) :
-    typeof define === 'function' && define.amd ? define(['exports', '@tweenjs/tween.js', 'three'], factory) :
-    (global = global || self, factory(global.THING = {}, global.TWEEN, global.THREE));
-}(this, function (exports, TWEEN, THREE) { 'use strict';
+    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('three'), require('@tweenjs/tween.js')) :
+    typeof define === 'function' && define.amd ? define(['exports', 'three', '@tweenjs/tween.js'], factory) :
+    (global = global || self, factory(global.THING = {}, global.THREE, global.TWEEN));
+}(this, function (exports, THREE, TWEEN) { 'use strict';
+
+    THREE.OrthographicCamera.prototype.orthoSize = function () {
+        return {
+            x: (this.right - this.left) / this.zoom,
+            y: (this.top - this.bottom) / this.zoom
+        };
+    };
+    THREE.OrthographicCamera.prototype.resize = function (width, height) {
+        if (this.userData !== undefined) {
+            var d = this.userData.depth * this.userData.z;
+            var e = d * (width / height);
+            this.left = -e / 2;
+            this.right = e / 2;
+            this.top = d / 2;
+            this.bottom = -d / 2;
+            this.updateProjectionMatrix();
+        }
+    };
+
+    THREE.PerspectiveCamera.prototype.orthoSize = function (x, c) {
+        var distance = x.distanceTo(c);
+        var depth = 2 * Math.tan(this.fov / 2 * Math.PI / 180);
+        var width = depth * distance;
+        return {
+            x: width * this.aspect,
+            y: width,
+            depth: depth,
+            z: distance
+        };
+    };
 
     /*
      * @Author: kekeqy
      * @Date: 2018-12-10 12:42:00
      * @LastEditors: kekeqy
-     * @LastEditTime: 2018-12-17 13:02:26
+     * @LastEditTime: 2019-01-14 16:41:54
      * @Description: 基础物体类型
      */
     var BaseObject = /** @class */ (function () {
-        function BaseObject() {
-            throw new Error('未实现！');
+        function BaseObject(app, node, parent) {
+            if (node === void 0) { node = null; }
+            if (parent === void 0) { parent = null; }
+            this.app = app;
+            this.node = node;
+            this._parent = parent;
         }
         /**
          * 添加子物体
@@ -52645,7 +52679,7 @@ TWEEN.Interpolation = {
              * @type {BaseObject}
              */
             get: function () {
-                throw new Error('未实现！');
+                return this._parent;
             },
             enumerable: true,
             configurable: true
@@ -52703,7 +52737,6 @@ TWEEN.Interpolation = {
         });
         return BaseObject;
     }());
-    //# sourceMappingURL=BaseObject.js.map
 
     var BaseStyle = /** @class */ (function () {
         function BaseStyle() {
@@ -52854,7 +52887,6 @@ TWEEN.Interpolation = {
         });
         return BaseStyle;
     }());
-    //# sourceMappingURL=BaseStyle.js.map
 
     /*
      * @Author: kekeqy
@@ -52893,7 +52925,6 @@ TWEEN.Interpolation = {
          */
         CameraView[CameraView["Perspective"] = 6] = "Perspective";
     })(exports.CameraView || (exports.CameraView = {}));
-    //# sourceMappingURL=CameraView.js.map
 
     /*! *****************************************************************************
     Copyright (c) Microsoft Corporation. All rights reserved.
@@ -53480,7 +53511,6 @@ TWEEN.Interpolation = {
         };
         return OrbitControls;
     }(THREE.EventDispatcher));
-    //# sourceMappingURL=OrbitControls.js.map
 
     /*
      * @Author: kekeqy
@@ -53913,7 +53943,6 @@ TWEEN.Interpolation = {
         };
         return CameraController;
     }());
-    //# sourceMappingURL=CameraController.js.map
 
     /*
      * @Author: kekeqy
@@ -54137,7 +54166,6 @@ TWEEN.Interpolation = {
         });
         return Selector;
     }());
-    //# sourceMappingURL=Selector.js.map
 
     /*
      * @Author: kekeqy
@@ -54265,74 +54293,310 @@ TWEEN.Interpolation = {
         };
         return SelectorStyle;
     }());
-    //# sourceMappingURL=SelectorStyle.js.map
+
+    /*
+     * @Author: kekeqy
+     * @Date: 2018-12-10 17:04:12
+     * @LastEditors: kekeqy
+     * @LastEditTime: 2019-01-15 11:20:05
+     * @Description: 描述
+     */
+    var Utils = /** @class */ (function () {
+        function Utils() {
+        }
+        /**
+         * 判断是否布尔值
+         * @memberof THING.Utils
+         * @param {*} value js元素
+         * @return {boolean}
+         */
+        Utils.isBoolean = function (value) {
+            return typeof value === 'boolean';
+        };
+        /**
+         * 判断是否DOM元素
+         * @memberof THING.Utils
+         * @param {*} value js元素
+         * @return {boolean}
+         */
+        Utils.isDom = function (value) {
+            throw new Error('未实现！');
+        };
+        /**
+         * 判断是否空
+         * @memberof THING.Utils
+         * @param {*} value js元素
+         * @return {boolean}
+         */
+        Utils.isNull = function (value) {
+            return value === undefined || value == null;
+        };
+        /**
+         * 判断是否空白字符串
+         * @memberof THING.Utils
+         * @param {*} value js元素
+         * @return {boolean}
+         */
+        Utils.isBlank = function (value) {
+            throw new Error('未实现！');
+        };
+        /**
+         * 判断是否空结构体
+         * @memberof THING.Utils
+         * @param {*} value js元素
+         * @return {boolean}
+         */
+        Utils.isEmptyObj = function (value) {
+            return JSON.stringify(value) === '{}';
+        };
+        /**
+         * 判断是否空数组
+         * @memberof THING.Utils
+         * @param {*} value js元素
+         * @return {boolean}
+         */
+        Utils.isEmptyArray = function (value) {
+            throw new Error('未实现！');
+        };
+        /**
+         * 字符串转成小写
+         * @memberof THING.Utils
+         * @param {string} value 字符串
+         * @return {string}
+         */
+        Utils.toLowerCase = function (value) {
+            return value ? value.toLowerCase() : '';
+        };
+        /**
+         * 成员键值全部转换成小写
+         * @memberof THING.Utils
+         * @param {Object} input 要处理的 js 对象
+         * @param {Boolean} deep 是否需要转换所有的键值
+         * @param {Function} filter 键值过滤函数
+         * @return {Object}
+         */
+        Utils.objectKeysToLowerCase = function (input, deep, filter) {
+            throw new Error('未实现！');
+        };
+        /**
+         * 克隆对象
+         * @memberof THING.Utils
+         * @param {Object} obj js对象
+         * @param {Boolean} shallow 是否进行浅层克隆, 如果是 false 则会完全进行克隆处理
+         * @return {Object}
+         */
+        Utils.cloneObject = function (obj, shallow) {
+            throw new Error('未实现！');
+        };
+        /**
+         * 合并简单对象
+         * @memberof THING.Utils
+         * @param {object} target 目标结构体
+         * @param {object} source 源结构体
+         * @param {boolean} overwrite 是否更新已经存在的属性
+         * @return {object}
+         */
+        Utils.mergeObject = function (target, source, overwrite) {
+            throw new Error('未实现！');
+        };
+        /**
+         * 判断结构体是否完全相等
+         * @memberof THING.Utils
+         * @param {Object} o1 第一个结构体
+         * @param {Object} o2 第二个结构体
+         * @return {Boolean}
+         */
+        Utils.isEqual = function (o1, o2) {
+            throw new Error('未实现！');
+        };
+        /**
+         * 异步加载
+         * @memberof THING.Utils
+         * @param {String} url 请求连接地址
+         * @param {Function} callback 回调方法
+         */
+        Utils.dynamicLoadJSON = function (url, callback) {
+            throw new Error('未实现！');
+        };
+        /**
+         * 动态加载 javascript 脚本后多app初始化参数记录
+         * @memberof THING.Utils
+         */
+        Utils._getJSLaunchArguments = function () {
+            throw new Error('未实现！');
+        };
+        /**
+         * 动态加载 javascript
+         * @memberof THING.Utils
+         * @param {String|Array<string>} url JS文件路径
+         * @param {Function} callback 回调方法
+         */
+        Utils.dynamicLoadJS = function (url, callback) {
+            throw new Error('未实现！');
+        };
+        /**
+         * 动态加载 css
+         * @memberof THING.Utils
+         * @param {String|Array<string>} url css 文件路径
+         * @param {Function} callback 回调方法
+         */
+        Utils.dynamicLoadCSS = function (url, callback) {
+            throw new Error('未实现！');
+        };
+        /**
+         * 添加物体类型转换规则
+         * @param {String} type 物体类名
+         * @param {String} condition 转换条件, 比如使用 /name/ 进行正则表达式匹配，能匹配上的才能进行转换
+         * @param {String} params? 新类型默认创建参数, 在转换成新类型后，会成为替换创建参数列表
+         * @example
+         * 1. 我们想把 id 为 1 的物体转换成 '.Cabinet' 类型，则可以通过以下接口实现
+         *  THING.Utils.addCastType('Cabinet', '#1');
+         * 2. 我们想把名字包含 'spotLight' 的物体都转换成 '.Cabinet' 类型，则可以通过以下接口实现
+         *  THING.Utils.addCastType('Cabinet', /spotLight/);
+         * 调用之后在场景加载的过程中，符合条件的物体都会以指定的类型创建，场景加载完成后，此规则自动被清除
+         */
+        Utils.addCastType = function (type, condition, params) {
+            throw new Error('未实现！');
+        };
+        /**
+         * 删除物体类型转换规则
+         * @param {String} type 物体类名
+         * @param {String} condition 转换条件
+         * @param {String} params? 新类型默认创建参数
+         */
+        Utils.removeCastType = function (type, condition, params) {
+            throw new Error('未实现！');
+        };
+        /**
+         * 异步执行函数
+         * @param {Function} callback 回调函数
+         * @example
+         * THING.Utils.runAsync(function() {
+         *  // ...
+         * });
+         */
+        Utils.runAsync = function (callback) {
+            throw new Error('未实现！');
+        };
+        Utils.toMatrixElementsArray = function (martix) {
+            return {
+                _00: martix.elements[0],
+                _01: martix.elements[1],
+                _02: martix.elements[2],
+                _03: martix.elements[3],
+                _10: martix.elements[4],
+                _11: martix.elements[5],
+                _12: martix.elements[6],
+                _13: martix.elements[7],
+                _20: martix.elements[8],
+                _21: martix.elements[9],
+                _22: martix.elements[10],
+                _23: martix.elements[11],
+                _30: martix.elements[12],
+                _31: martix.elements[13],
+                _32: martix.elements[14],
+                _33: martix.elements[15]
+            };
+        };
+        Utils.elementsArrayToMatrix = function (martix, o) {
+            martix.elements[0] = o._00;
+            martix.elements[1] = o._01;
+            martix.elements[2] = o._02;
+            martix.elements[3] = o._03;
+            martix.elements[4] = o._10;
+            martix.elements[5] = o._11;
+            martix.elements[6] = o._12;
+            martix.elements[7] = o._13;
+            martix.elements[8] = o._20;
+            martix.elements[9] = o._21;
+            martix.elements[10] = o._22;
+            martix.elements[11] = o._23;
+            martix.elements[12] = o._30;
+            martix.elements[13] = o._31;
+            martix.elements[14] = o._32;
+            martix.elements[15] = o._33;
+        };
+        return Utils;
+    }());
 
     /*
      * @Author: kekeqy
      * @Date: 2018-12-18 17:41:12
      * @LastEditors: kekeqy
-     * @LastEditTime: 2019-01-07 16:09:45
+     * @LastEditTime: 2019-01-15 16:56:05
      * @Description: 复合相机
      */
     var CombinedCamera = /** @class */ (function (_super) {
         __extends(CombinedCamera, _super);
-        function CombinedCamera(width, height, fov, near, far) {
+        function CombinedCamera(width, height, fov, near, far, orthoNear, orthoFar) {
             var _this = _super.call(this) || this;
             _this.fov = fov;
-            _this.far = far;
-            _this.near = near;
             _this.left = -width / 2;
             _this.right = width / 2;
             _this.top = height / 2;
             _this.bottom = -height / 2;
-            _this.aspect = width / height;
-            _this.zoom = 1;
-            // 我们也可以在内部处理projectionMatrix，但只是想测试嵌套的摄像机对象
-            _this.cameraO = new THREE.OrthographicCamera(width / -2, width / 2, height / 2, height / -2, near, far);
+            _this.cameraO = new THREE.OrthographicCamera(width / -2, width / 2, height / 2, height / -2, orthoNear, orthoFar);
             _this.cameraP = new THREE.PerspectiveCamera(fov, width / height, near, far);
+            _this.zoom = 1;
+            _this.view = null;
+            _this.matrixTween = null;
             _this.toPerspective();
             return _this;
-            // this.toOrthographic();
         }
+        /** 切换到透视相机 */
         CombinedCamera.prototype.toPerspective = function () {
-            // 切换到透视相机
             this.near = this.cameraP.near;
             this.far = this.cameraP.far;
-            this.cameraP.aspect = this.aspect;
-            this.cameraP.fov = this.fov;
             this.cameraP.updateProjectionMatrix();
             this.projectionMatrix = this.cameraP.projectionMatrix;
-            this.isPerspectiveCamera = true;
-            this.isOrthographicCamera = false;
-            this.type = 'PerspectiveCamera';
+            this.inPerspectiveMode = true;
+            this.inOrthographicMode = false;
         };
         /** 切换到正交相机 */
         CombinedCamera.prototype.toOrthographic = function () {
-            //切换到正交相机，从透视评估视口
-            var fov = this.fov;
             var aspect = this.cameraP.aspect;
-            var near = this.cameraP.near;
-            var far = this.cameraP.far;
-            // 我们设置的大小是视锥台的中间平面
-            var hyperfocus = (near + far) / 2;
-            var halfHeight = Math.tan(fov * Math.PI / 180 / 2) * hyperfocus;
-            // let halfWidth: number = halfHeight * aspect;
-            // halfHeight /= this.zoom;
-            // halfWidth /= this.zoom;
-            // this.cameraO.left = - halfWidth;
-            // this.cameraO.right = halfWidth;
-            // this.cameraO.top = halfHeight;
-            // this.cameraO.bottom = - halfHeight;
-            // this.cameraO.view = this.view;
-            this.cameraO.zoom = halfHeight / 17;
+            var distance = this.orthoSize.z;
+            var depth = this.orthoSize.depth;
+            var halfWidth = depth * distance * aspect / 2;
+            var halfHeight = depth * distance / 2;
+            halfHeight /= this.zoom;
+            halfWidth /= this.zoom;
+            this.cameraO.left = -halfWidth;
+            this.cameraO.right = halfWidth;
+            this.cameraO.top = halfHeight;
+            this.cameraO.bottom = -halfHeight;
             this.cameraO.updateProjectionMatrix();
             this.near = this.cameraO.near;
             this.far = this.cameraO.far;
             this.projectionMatrix = this.cameraO.projectionMatrix;
-            this.isPerspectiveCamera = false;
-            this.isOrthographicCamera = true;
-            this.type = 'OrthographicCamera';
-            this.zoom = halfHeight * 1.8;
+            this.inPerspectiveMode = false;
+            this.inOrthographicMode = true;
+        };
+        CombinedCamera.prototype.setSize = function (width, height) {
+            this.cameraP.aspect = width / height;
+            this.left = -width / 2;
+            this.right = width / 2;
+            this.top = height / 2;
+            this.bottom = -height / 2;
+            this.updateProjectionMatrix();
+        };
+        CombinedCamera.prototype.setFov = function (fov) {
+            this.fov = fov;
+            if (this.inPerspectiveMode) {
+                this.cameraP.fov = fov;
+                this.toPerspective();
+            }
+            else {
+                this.toOrthographic();
+            }
+        };
+        CombinedCamera.prototype.setViewOffset = function (fullWidth, fullHeight, offsetX, offsetY, width, height) {
+            this.cameraP.setViewOffset(fullWidth, fullHeight, offsetX, offsetY, width, height);
+            this.cameraO.setViewOffset(fullWidth, fullHeight, offsetX, offsetY, width, height);
+        };
+        CombinedCamera.prototype.clearViewOffset = function () {
+            this.cameraP.clearViewOffset();
+            this.cameraO.clearViewOffset();
         };
         CombinedCamera.prototype.updateProjectionMatrix = function () {
             if (this.isPerspectiveCamera) {
@@ -54343,15 +54607,152 @@ TWEEN.Interpolation = {
                 this.toOrthographic();
             }
         };
+        CombinedCamera.prototype.setLens = function (focalLength, filmGauge) {
+            if (filmGauge === void 0) { filmGauge = 35; }
+            var vExtentSlope = 0.5 * filmGauge / (focalLength * Math.max(this.cameraP.aspect, 1));
+            var fov = THREE.Math.RAD2DEG * 2 * Math.atan(vExtentSlope);
+            this.setFov(fov);
+            return fov;
+        };
+        CombinedCamera.prototype.setZoom = function (zoom) {
+            this.zoom = zoom;
+            if (this.inPerspectiveMode) {
+                this.toPerspective();
+            }
+            else {
+                this.toOrthographic();
+            }
+        };
+        CombinedCamera.prototype.toFrontView = function () {
+            this.rotation.x = 0;
+            this.rotation.y = 0;
+            this.rotation.z = 0;
+            this.rotationAutoUpdate = false;
+        };
+        CombinedCamera.prototype.toBackView = function () {
+            this.rotation.x = 0;
+            this.rotation.y = Math.PI;
+            this.rotation.z = 0;
+            this.rotationAutoUpdate = false;
+        };
+        CombinedCamera.prototype.toLeftView = function () {
+            this.rotation.x = 0;
+            this.rotation.y = -Math.PI / 2;
+            this.rotation.z = 0;
+            this.rotationAutoUpdate = false;
+        };
+        CombinedCamera.prototype.toRightView = function () {
+            this.rotation.x = 0;
+            this.rotation.y = Math.PI / 2;
+            this.rotation.z = 0;
+            this.rotationAutoUpdate = false;
+        };
+        CombinedCamera.prototype.toTopView = function () {
+            this.rotation.x = -Math.PI / 2;
+            this.rotation.y = 0;
+            this.rotation.z = 0;
+            this.rotationAutoUpdate = false;
+        };
+        CombinedCamera.prototype.toBottomView = function () {
+            this.rotation.x = Math.PI / 2;
+            this.rotation.y = 0;
+            this.rotation.z = 0;
+            this.rotationAutoUpdate = false;
+        };
+        Object.defineProperty(CombinedCamera.prototype, "isPerspectiveCamera", {
+            get: function () {
+                return this.inPerspectiveMode;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(CombinedCamera.prototype, "isOrthographicCamera", {
+            get: function () {
+                return this.inOrthographicMode;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        CombinedCamera.prototype.setNear = function (near) {
+            this.cameraP.near = near;
+            this.cameraO.near = near;
+            this.updateProjectionMatrix();
+        };
+        CombinedCamera.prototype.setFar = function (far) {
+            this.cameraP.far = far;
+            this.cameraO.far = far;
+            this.updateProjectionMatrix();
+        };
+        CombinedCamera.prototype.toPerspectiveCamera = function () {
+            var camera = new CombinedCamera(1, 1, 1, 1, 1, 1, 1);
+            camera.fov = this.fov;
+            camera.left = this.left;
+            camera.right = this.right;
+            camera.top = this.top;
+            camera.bottom = this.bottom;
+            camera.cameraO = new THREE.OrthographicCamera(1, 1, 1, 1, 1, 1);
+            camera.cameraO.copy(this.cameraO);
+            camera.cameraP = new THREE.PerspectiveCamera(1, 1, 1, 1);
+            camera.cameraP.copy(this.cameraP);
+            camera.zoom = this.zoom;
+            camera.toPerspective();
+            return camera;
+        };
+        CombinedCamera.prototype.toOrthoCamera = function (pos, target) {
+            var orthoSize = this.cameraP.orthoSize(pos, target);
+            var camera = new CombinedCamera(orthoSize.x, orthoSize.y, this.fov, this.near, this.far, this.cameraO.near, this.cameraO.far);
+            camera.orthoSize = orthoSize;
+            camera.toOrthographic();
+            return camera;
+        };
+        CombinedCamera.prototype.lerpMatrix = function (currentProjectionMatrix, targetProjectionMatrix, time, callback) {
+            var current = Utils.toMatrixElementsArray(currentProjectionMatrix);
+            var target = Utils.toMatrixElementsArray(targetProjectionMatrix);
+            this.matrixTween && this.matrixTween.stop();
+            this.matrixTween = new TWEEN.Tween(current).to(target, time).easing(TWEEN.Easing.Quintic.Out).onUpdate(function (object) {
+                console.log(object);
+                Utils.elementsArrayToMatrix(currentProjectionMatrix, object);
+            }).onComplete(function () {
+                callback && callback();
+            }).start();
+            console.log(this.matrixTween);
+        };
+        CombinedCamera.prototype.lerpToOrthographic = function (pos, target, time, callback) {
+            var _this = this;
+            var camera = this.toOrthoCamera(pos, target);
+            this.orthoSize = camera.orthoSize;
+            this.zoom = 1;
+            this.lerpMatrix(this.projectionMatrix, camera.projectionMatrix, time, function () {
+                _this.toOrthographic();
+                callback && callback();
+            });
+        };
+        CombinedCamera.prototype.lerpToPerspective = function (time, callback) {
+            var _this = this;
+            var camera = this.toPerspectiveCamera();
+            this.lerpMatrix(this.projectionMatrix, camera.projectionMatrix, time, function () {
+                _this.toPerspective();
+                callback && callback();
+            });
+        };
+        CombinedCamera.prototype.getEffectiveFOV = function () {
+            return this.cameraP.getEffectiveFOV();
+        };
+        CombinedCamera.prototype.isInView = function (box) {
+            var matrix = new THREE.Matrix4();
+            matrix.multiplyMatrices(this.projectionMatrix, this.matrixWorldInverse);
+            var frustum = new THREE.Frustum();
+            frustum.setFromMatrix(matrix);
+            return frustum.intersectsBox(box);
+        };
         return CombinedCamera;
     }(THREE.Camera));
-    //# sourceMappingURL=CombinedCamera.js.map
 
     /*
      * @Author: kekeqy
      * @Date: 2018-12-12 12:59:36
      * @LastEditors: kekeqy
-     * @LastEditTime: 2019-01-10 15:14:31
+     * @LastEditTime: 2019-01-15 17:23:10
      * @Description: 对three引擎的封装
      */
     var Engine = /** @class */ (function () {
@@ -54390,34 +54791,16 @@ TWEEN.Interpolation = {
             secondary_light.name = 'secondary_light';
             this.scene.add(secondary_light);
             //相机初始化
-            this.camera = new CombinedCamera(this.renderer.domElement.clientWidth, this.renderer.domElement.clientHeight, 60, 0.1, 10000);
+            this.camera = new CombinedCamera(this.renderer.domElement.clientWidth, this.renderer.domElement.clientHeight, 60, 0.1, 10000, 0.1, 10000);
             this.camera.position.set(0, 10, 0);
             this.camera.lookAt(0, 0, 0);
             this.cameraP = new THREE.PerspectiveCamera(60, this.renderer.domElement.clientWidth / this.renderer.domElement.clientHeight, 0.1, 10000);
             this.cameraP.position.set(0, 1, 0);
             this.cameraP.lookAt(0, 0, 0);
-            this.cameraP.view = {
-                enabled: true,
-                fullWidth: this.renderer.domElement.clientWidth,
-                fullHeight: this.renderer.domElement.clientHeight,
-                offsetX: 0,
-                offsetY: 0,
-                width: this.renderer.domElement.clientWidth / 2,
-                height: this.renderer.domElement.clientHeight
-            };
             this.cameraO = new THREE.OrthographicCamera(-this.renderer.domElement.clientWidth / 2, this.renderer.domElement.clientWidth / 2, this.renderer.domElement.clientHeight / 2, -this.renderer.domElement.clientHeight / 2, 0.1, 1000);
             this.cameraO.position.set(0, 1, 0);
             this.cameraO.lookAt(0, 0, 0);
             this.cameraO.zoom = 124;
-            this.cameraO.view = {
-                enabled: true,
-                fullWidth: this.renderer.domElement.clientWidth,
-                fullHeight: this.renderer.domElement.clientHeight,
-                offsetX: this.renderer.domElement.clientWidth / 2,
-                offsetY: 0,
-                width: this.renderer.domElement.clientWidth / 2,
-                height: this.renderer.domElement.clientHeight
-            };
             this.cameraO.updateProjectionMatrix();
             var loader = new THREE.GLTFLoader();
             loader.load('asset/model/jigui.glb', function (gltf) {
@@ -54434,18 +54817,13 @@ TWEEN.Interpolation = {
                 box.getSize(_this.size);
                 _this.radius = box.getBoundingSphere(new THREE.Sphere()).radius;
                 var pos = _this.center.clone();
-                pos.y += _this.radius * 1;
-                pos.z += _this.radius * 1;
+                pos.y += _this.radius * 2;
+                pos.z += _this.radius * 2;
                 var xyz = new THREE.Vector3(1, 1, 0);
                 xyz.applyEuler(new THREE.Euler(45 * THREE.Math.DEG2RAD, -45 * THREE.Math.DEG2RAD, 0, 'XYZ'));
                 pos.add(xyz);
-                // this.camera.position.set(0, 5, 0);
-                // this.cameraP.lookAt(this.center);
-                // this.app.camera.position = [pos.x, pos.y, pos.z];
-                // this.app.camera.target = [0, 0, 0];
-                // this.cameraO.position.set(0, 0, 5);
-                // // this.cameraO.zoom = 100;
-                // this.cameraO.lookAt(new Vector3(0,0,0));
+                _this.app.camera.position = [pos.x, pos.y, pos.z];
+                _this.app.camera.target = [_this.center.x, _this.center.y, _this.center.z];
             });
             var path = 'asset/skybox/';
             var format = '.jpg';
@@ -54462,16 +54840,42 @@ TWEEN.Interpolation = {
             e.action.getClip().name === 'close' && e.action.stop();
         };
         Engine.prototype.onKeyDown = function (e) {
-            // if (e.key == "b") {
-            //     console.log(this.camera);
-            //     return;
-            // }
-            // if (!this.state) {
+            // if (this.camera.isPerspectiveCamera) {
+            //     let cam = this.camera.toOrthoCamera(this.camera.position, this.app.camera.controller.target);
+            //     this.camera.orthoSize = cam.orthoSize;
+            //     this.camera.left = cam.left;
+            //     this.camera.right = cam.right;
+            //     this.camera.top = cam.top;
+            //     this.camera.bottom = cam.bottom;
+            //     this.camera.near = cam.near;
+            //     this.camera.far = cam.far;
             //     this.camera.toOrthographic();
             // }
-            // else this.camera.toPerspective();
-            // this.state = !this.state;
-            console.log(this.camera);
+            // else {
+            //     let cam = this.camera.toPerspectiveCamera();
+            //     this.camera.fov = cam.fov;
+            //     this.camera.near = cam.near;
+            //     this.camera.far = cam.far;
+            //     this.camera.toPerspective();
+            // }
+            if (this.camera.isPerspectiveCamera) {
+                //缓动到正交相机
+                var pos = this.center.clone();
+                pos.y += this.radius * 2;
+                var target = this.center.clone();
+                this.camera.lerpToOrthographic(pos, target, 1000);
+            }
+            else {
+                var pos = this.center.clone();
+                pos.y += this.radius * 2;
+                pos.z += this.radius * 2;
+                var xyz = new THREE.Vector3(1, 1, 0);
+                xyz.applyEuler(new THREE.Euler(45 * THREE.Math.DEG2RAD, -45 * THREE.Math.DEG2RAD, 0, 'XYZ'));
+                pos.add(xyz);
+                this.camera.lerpToPerspective(1000);
+            }
+            var tween = new TWEEN.Tween({ x: 100 }).to(0, 10000).onUpdate(function (obj) { return console.log(obj); }).start();
+            // console.log(tween);
         };
         Object.defineProperty(Engine.prototype, "currentFrame", {
             /** 当前帧率 */
@@ -54491,16 +54895,17 @@ TWEEN.Interpolation = {
             this.renderer.render(this.scene, this.camera);
             if (this.mixer)
                 this.mixer.update(this.clock.getDelta());
+            TWEEN.update(this.clock.getDelta());
             requestAnimationFrame(function () { return _this.animate(); });
         };
         Engine.prototype.onResize = function () {
             this.camera.aspect = this.renderer.domElement.clientWidth / this.renderer.domElement.clientHeight;
+            this.camera.cameraP.aspect = this.renderer.domElement.clientWidth / this.renderer.domElement.clientHeight;
             this.camera.updateProjectionMatrix();
             this.renderer.setSize(this.renderer.domElement.clientWidth, this.renderer.domElement.clientHeight, false);
         };
         return Engine;
     }());
-    //# sourceMappingURL=Engine.js.map
 
     /*
      * @Author: kekeqy
@@ -54969,19 +55374,18 @@ TWEEN.Interpolation = {
         };
         return App;
     }());
-    //# sourceMappingURL=App.js.map
 
     /*
      * @Author: kekeqy
      * @Date: 2018-12-10 14:55:14
      * @LastEditors: kekeqy
-     * @LastEditTime: 2018-12-10 15:02:07
+     * @LastEditTime: 2019-01-14 16:46:15
      * @Description: 建筑
      */
     var Building = /** @class */ (function (_super) {
         __extends(Building, _super);
-        function Building() {
-            var _this = _super.call(this) || this;
+        function Building(app) {
+            var _this = _super.call(this, app) || this;
             throw new Error('未实现！');
             return _this;
         }
@@ -55088,19 +55492,18 @@ TWEEN.Interpolation = {
         });
         return Building;
     }(BaseObject));
-    //# sourceMappingURL=Building.js.map
 
     /*
      * @Author: kekeqy
      * @Date: 2018-12-10 15:04:07
      * @LastEditors: kekeqy
-     * @LastEditTime: 2018-12-10 15:07:03
+     * @LastEditTime: 2019-01-14 16:46:13
      * @Description: 园区数据
      */
     var Campus = /** @class */ (function (_super) {
         __extends(Campus, _super);
-        function Campus() {
-            var _this = _super.call(this) || this;
+        function Campus(app) {
+            var _this = _super.call(this, app) || this;
             throw new Error('未实现！');
             return _this;
         }
@@ -55139,19 +55542,18 @@ TWEEN.Interpolation = {
         });
         return Campus;
     }(BaseObject));
-    //# sourceMappingURL=Campus.js.map
 
     /*
      * @Author: kekeqy
      * @Date: 2018-12-10 15:11:26
      * @LastEditors: kekeqy
-     * @LastEditTime: 2018-12-10 15:16:05
+     * @LastEditTime: 2019-01-14 16:47:13
      * @Description: 外立面
      */
     var Facade = /** @class */ (function (_super) {
         __extends(Facade, _super);
-        function Facade() {
-            var _this = _super.call(this) || this;
+        function Facade(app) {
+            var _this = _super.call(this, app) || this;
             throw new Error('未实现！');
             return _this;
         }
@@ -55168,19 +55570,18 @@ TWEEN.Interpolation = {
         });
         return Facade;
     }(BaseObject));
-    //# sourceMappingURL=Facade.js.map
 
     /*
      * @Author: kekeqy
      * @Date: 2018-12-10 15:21:12
      * @LastEditors: kekeqy
-     * @LastEditTime: 2018-12-10 15:34:15
+     * @LastEditTime: 2019-01-14 16:47:27
      * @Description: 楼层
      */
     var Floor = /** @class */ (function (_super) {
         __extends(Floor, _super);
-        function Floor() {
-            var _this = _super.call(this) || this;
+        function Floor(app) {
+            var _this = _super.call(this, app) || this;
             throw new Error('未实现！');
             return _this;
         }
@@ -55325,55 +55726,52 @@ TWEEN.Interpolation = {
         });
         return Floor;
     }(BaseObject));
-    //# sourceMappingURL=Floor.js.map
 
     /*
      * @Author: kekeqy
      * @Date: 2018-12-10 14:27:49
      * @LastEditors: kekeqy
-     * @LastEditTime: 2018-12-10 14:28:06
+     * @LastEditTime: 2019-01-14 16:50:27
      * @Description: 热力图
      */
     var Heatmap = /** @class */ (function (_super) {
         __extends(Heatmap, _super);
-        function Heatmap() {
-            var _this = _super.call(this) || this;
+        function Heatmap(app) {
+            var _this = _super.call(this, app) || this;
             throw new Error('未实现！');
             return _this;
         }
         return Heatmap;
     }(BaseObject));
-    //# sourceMappingURL=Heatmap.js.map
 
     /*
      * @Author: kekeqy
      * @Date: 2018-12-10 16:23:46
      * @LastEditors: kekeqy
-     * @LastEditTime: 2018-12-10 16:23:59
+     * @LastEditTime: 2019-01-14 16:53:13
      * @Description: 光线基类
      */
     var LightBase = /** @class */ (function (_super) {
         __extends(LightBase, _super);
-        function LightBase() {
-            var _this = _super.call(this) || this;
+        function LightBase(app) {
+            var _this = _super.call(this, app) || this;
             throw new Error('未实现！');
             return _this;
         }
         return LightBase;
     }(BaseObject));
-    //# sourceMappingURL=LightBase.js.map
 
     /*
      * @Author: kekeqy
      * @Date: 2018-12-10 14:32:57
      * @LastEditors: kekeqy
-     * @LastEditTime: 2018-12-10 14:35:41
+     * @LastEditTime: 2019-01-14 16:50:16
      * @Description: 轨迹线
      */
     var Line = /** @class */ (function (_super) {
         __extends(Line, _super);
-        function Line() {
-            var _this = _super.call(this) || this;
+        function Line(app) {
+            var _this = _super.call(this, app) || this;
             throw new Error('未实现！');
             return _this;
         }
@@ -55442,20 +55840,19 @@ TWEEN.Interpolation = {
         });
         return Line;
     }(BaseObject));
-    //# sourceMappingURL=Line.js.map
 
     /*
      * @Author: kekeqy
      * @Date: 2018-12-10 14:07:59
      * @LastEditors: kekeqy
-     * @LastEditTime: 2018-12-10 14:14:14
+     * @LastEditTime: 2019-01-14 16:46:35
      * @Description: 此类可以用作各种带顶点编辑属性的模型，比如区域和水面的顶点编辑，主要封装了对顶点（编辑点）的操作行为，包括添加、删除，获取等。
      * @Description: 如果想使用这个类的特性，直接从此类派生即可，详细的写法可以参看Water类或者Region类的写法。
      */
     var PointsBase = /** @class */ (function (_super) {
         __extends(PointsBase, _super);
-        function PointsBase() {
-            var _this = _super.call(this) || this;
+        function PointsBase(app) {
+            var _this = _super.call(this, app) || this;
             throw new Error('未实现！');
             return _this;
         }
@@ -55549,19 +55946,18 @@ TWEEN.Interpolation = {
         });
         return PointsBase;
     }(BaseObject));
-    //# sourceMappingURL=PointsBase.js.map
 
     /*
      * @Author: kekeqy
      * @Date: 2018-12-10 14:14:56
      * @LastEditors: kekeqy
-     * @LastEditTime: 2018-12-10 14:29:02
+     * @LastEditTime: 2019-01-14 16:46:56
      * @Description: 线段基类
      */
     var LineBase = /** @class */ (function (_super) {
         __extends(LineBase, _super);
-        function LineBase() {
-            var _this = _super.call(this) || this;
+        function LineBase(app) {
+            var _this = _super.call(this, app) || this;
             throw new Error('未实现！');
             return _this;
         }
@@ -55647,13 +56043,12 @@ TWEEN.Interpolation = {
         });
         return LineBase;
     }(PointsBase));
-    //# sourceMappingURL=LineBase.js.map
 
     /*
      * @Author: kekeqy
      * @Date: 2018-12-10 16:06:32
      * @LastEditors: kekeqy
-     * @LastEditTime: 2018-12-10 16:15:04
+     * @LastEditTime: 2019-01-14 16:52:44
      * @Description: 3D场景内的标记，往往用于顶牌，可以传入div, image或canvas写文字，可以拾取、跟随物体、和物体一并删除
      * var marker = app.create({
      *      type: "Marker",
@@ -55665,8 +56060,8 @@ TWEEN.Interpolation = {
      */
     var Marker = /** @class */ (function (_super) {
         __extends(Marker, _super);
-        function Marker() {
-            var _this = _super.call(this) || this;
+        function Marker(app) {
+            var _this = _super.call(this, app) || this;
             throw new Error('未实现！');
             return _this;
         }
@@ -55847,7 +56242,6 @@ TWEEN.Interpolation = {
         });
         return Marker;
     }(BaseObject));
-    //# sourceMappingURL=Marker.js.map
 
     /*
      * @Author: kekeqy
@@ -56038,7 +56432,6 @@ TWEEN.Interpolation = {
         };
         return Maths;
     }());
-    //# sourceMappingURL=Maths.js.map
 
     /*
      * @Author: kekeqy
@@ -56065,7 +56458,6 @@ TWEEN.Interpolation = {
         };
         return Navigation;
     }());
-    //# sourceMappingURL=Navigation.js.map
 
     /*
      * @Author: kekeqy
@@ -56167,25 +56559,23 @@ TWEEN.Interpolation = {
         };
         return PanoManager;
     }());
-    //# sourceMappingURL=PanoManager.js.map
 
     /*
      * @Author: kekeqy
      * @Date: 2018-12-10 14:36:47
      * @LastEditors: kekeqy
-     * @LastEditTime: 2018-12-10 14:37:41
+     * @LastEditTime: 2019-01-14 16:49:59
      * @Description: 粒子系统
      */
     var ParticleSystem = /** @class */ (function (_super) {
         __extends(ParticleSystem, _super);
-        function ParticleSystem() {
-            var _this = _super.call(this) || this;
+        function ParticleSystem(app) {
+            var _this = _super.call(this, app) || this;
             throw new Error('未实现！');
             return _this;
         }
         return ParticleSystem;
     }(BaseObject));
-    //# sourceMappingURL=ParticleSystem.js.map
 
     /*
      * @Author: kekeqy
@@ -56274,19 +56664,18 @@ TWEEN.Interpolation = {
         };
         return Picker;
     }());
-    //# sourceMappingURL=Picker.js.map
 
     /*
      * @Author: kekeqy
      * @Date: 2018-12-10 14:40:08
      * @LastEditors: kekeqy
-     * @LastEditTime: 2018-12-10 14:41:50
+     * @LastEditTime: 2019-01-14 16:49:34
      * @Description: 管线
      */
     var PolygonLine = /** @class */ (function (_super) {
         __extends(PolygonLine, _super);
-        function PolygonLine() {
-            var _this = _super.call(this) || this;
+        function PolygonLine(app) {
+            var _this = _super.call(this, app) || this;
             throw new Error('未实现！');
             return _this;
         }
@@ -56314,19 +56703,18 @@ TWEEN.Interpolation = {
         });
         return PolygonLine;
     }(LineBase));
-    //# sourceMappingURL=PolygonLine.js.map
 
     /*
      * @Author: kekeqy
      * @Date: 2018-12-10 15:34:54
      * @LastEditors: kekeqy
-     * @LastEditTime: 2018-12-10 15:39:16
+     * @LastEditTime: 2019-01-14 16:47:39
      * @Description: 描述
      */
     var Room = /** @class */ (function (_super) {
         __extends(Room, _super);
-        function Room() {
-            var _this = _super.call(this) || this;
+        function Room(app) {
+            var _this = _super.call(this, app) || this;
             throw new Error('未实现！');
             return _this;
         }
@@ -56460,19 +56848,18 @@ TWEEN.Interpolation = {
         });
         return Room;
     }(BaseObject));
-    //# sourceMappingURL=Room.js.map
 
     /*
      * @Author: kekeqy
      * @Date: 2018-12-10 14:48:36
      * @LastEditors: kekeqy
-     * @LastEditTime: 2018-12-10 18:03:19
+     * @LastEditTime: 2019-01-14 16:49:22
      * @Description: 路线
      */
     var RouteLine = /** @class */ (function (_super) {
         __extends(RouteLine, _super);
-        function RouteLine() {
-            var _this = _super.call(this) || this;
+        function RouteLine(app) {
+            var _this = _super.call(this, app) || this;
             throw new Error('未实现！');
             return _this;
         }
@@ -56496,7 +56883,6 @@ TWEEN.Interpolation = {
         };
         return RouteLine;
     }(LineBase));
-    //# sourceMappingURL=RouteLine.js.map
 
     /*
      * @Author: kekeqy
@@ -56549,19 +56935,18 @@ TWEEN.Interpolation = {
         };
         return SceneLevel;
     }());
-    //# sourceMappingURL=SceneLevel.js.map
 
     /*
      * @Author: kekeqy
      * @Date: 2018-12-10 15:47:33
      * @LastEditors: kekeqy
-     * @LastEditTime: 2018-12-11 13:19:30
+     * @LastEditTime: 2019-01-14 16:58:01
      * @Description: 场景根节点
      */
     var SceneRoot = /** @class */ (function (_super) {
         __extends(SceneRoot, _super);
-        function SceneRoot() {
-            var _this = _super.call(this) || this;
+        function SceneRoot(app) {
+            var _this = _super.call(this, app) || this;
             throw new Error('未实现！');
             return _this;
         }
@@ -56611,7 +56996,6 @@ TWEEN.Interpolation = {
         });
         return SceneRoot;
     }(BaseObject));
-    //# sourceMappingURL=SceneRoot.js.map
 
     /*
      * @Author: kekeqy
@@ -56679,19 +57063,18 @@ TWEEN.Interpolation = {
         };
         return Selection;
     }());
-    //# sourceMappingURL=Selection.js.map
 
     /*
      * @Author: kekeqy
      * @Date: 2018-12-10 16:25:36
      * @LastEditors: kekeqy
-     * @LastEditTime: 2018-12-10 16:27:46
+     * @LastEditTime: 2019-01-14 16:53:23
      * @Description: 聚光灯
      */
     var SpotLight = /** @class */ (function (_super) {
         __extends(SpotLight, _super);
-        function SpotLight() {
-            var _this = _super.call(this) || this;
+        function SpotLight(app) {
+            var _this = _super.call(this, app) || this;
             throw new Error('未实现！');
             return _this;
         }
@@ -56741,19 +57124,18 @@ TWEEN.Interpolation = {
         });
         return SpotLight;
     }(LightBase));
-    //# sourceMappingURL=SpotLight.js.map
 
     /*
      * @Author: kekeqy
      * @Date: 2018-12-10 14:23:25
      * @LastEditors: kekeqy
-     * @LastEditTime: 2018-12-10 17:54:25
+     * @LastEditTime: 2019-01-14 16:48:13
      * @Description: 物体
      */
     var Thing = /** @class */ (function (_super) {
         __extends(Thing, _super);
-        function Thing() {
-            var _this = _super.call(this) || this;
+        function Thing(app) {
+            var _this = _super.call(this, app) || this;
             throw new Error('未实现！');
             return _this;
         }
@@ -56834,7 +57216,6 @@ TWEEN.Interpolation = {
         });
         return Thing;
     }(BaseObject));
-    //# sourceMappingURL=Thing.js.map
 
     /*
      * @Author: kekeqy
@@ -56849,219 +57230,29 @@ TWEEN.Interpolation = {
         }
         return UIAnchor;
     }());
-    //# sourceMappingURL=UIAnchor.js.map
-
-    /*
-     * @Author: kekeqy
-     * @Date: 2018-12-10 17:04:12
-     * @LastEditors: kekeqy
-     * @LastEditTime: 2018-12-10 17:07:16
-     * @Description: 描述
-     */
-    var Utils = /** @class */ (function () {
-        function Utils() {
-        }
-        /**
-         * 判断是否布尔值
-         * @memberof THING.Utils
-         * @param {*} value js元素
-         * @return {boolean}
-         */
-        Utils.isBoolean = function (value) {
-            throw new Error('未实现！');
-        };
-        /**
-         * 判断是否DOM元素
-         * @memberof THING.Utils
-         * @param {*} value js元素
-         * @return {boolean}
-         */
-        Utils.isDom = function (value) {
-            throw new Error('未实现！');
-        };
-        /**
-         * 判断是否空
-         * @memberof THING.Utils
-         * @param {*} o js元素
-         * @return {boolean}
-         */
-        Utils.isNull = function (o) {
-            throw new Error('未实现！');
-        };
-        /**
-         * 判断是否空白字符串
-         * @memberof THING.Utils
-         * @param {*} o js元素
-         * @return {boolean}
-         */
-        Utils.isBlank = function (o) {
-            throw new Error('未实现！');
-        };
-        /**
-         * 判断是否空结构体
-         * @memberof THING.Utils
-         * @param {*} o js元素
-         * @return {boolean}
-         */
-        Utils.isEmptyObj = function (o) {
-            throw new Error('未实现！');
-        };
-        /**
-         * 判断是否空数组
-         * @memberof THING.Utils
-         * @param {*} o js元素
-         * @return {boolean}
-         */
-        Utils.isEmptyArray = function (o) {
-            throw new Error('未实现！');
-        };
-        /**
-         * 字符串转成小写
-         * @memberof THING.Utils
-         * @param {string} s 字符串
-         * @return {string}
-         */
-        Utils.toLowerCase = function (s) {
-            throw new Error('未实现！');
-        };
-        /**
-         * 成员键值全部转换成小写
-         * @memberof THING.Utils
-         * @param {Object} input 要处理的 js 对象
-         * @param {Boolean} deep 是否需要转换所有的键值
-         * @param {Function} filter 键值过滤函数
-         * @return {Object}
-         */
-        Utils.objectKeysToLowerCase = function (input, deep, filter) {
-            throw new Error('未实现！');
-        };
-        /**
-         * 克隆对象
-         * @memberof THING.Utils
-         * @param {Object} obj js对象
-         * @param {Boolean} shallow 是否进行浅层克隆, 如果是 false 则会完全进行克隆处理
-         * @return {Object}
-         */
-        Utils.cloneObject = function (obj, shallow) {
-            throw new Error('未实现！');
-        };
-        /**
-         * 合并简单对象
-         * @memberof THING.Utils
-         * @param {object} target 目标结构体
-         * @param {object} source 源结构体
-         * @param {boolean} overwrite 是否更新已经存在的属性
-         * @return {object}
-         */
-        Utils.mergeObject = function (target, source, overwrite) {
-            throw new Error('未实现！');
-        };
-        /**
-         * 判断结构体是否完全相等
-         * @memberof THING.Utils
-         * @param {Object} o1 第一个结构体
-         * @param {Object} o2 第二个结构体
-         * @return {Boolean}
-         */
-        Utils.isEqual = function (o1, o2) {
-            throw new Error('未实现！');
-        };
-        /**
-         * 异步加载
-         * @memberof THING.Utils
-         * @param {String} url 请求连接地址
-         * @param {Function} callback 回调方法
-         */
-        Utils.dynamicLoadJSON = function (url, callback) {
-            throw new Error('未实现！');
-        };
-        /**
-         * 动态加载 javascript 脚本后多app初始化参数记录
-         * @memberof THING.Utils
-         */
-        Utils._getJSLaunchArguments = function () {
-            throw new Error('未实现！');
-        };
-        /**
-         * 动态加载 javascript
-         * @memberof THING.Utils
-         * @param {String|Array<string>} url JS文件路径
-         * @param {Function} callback 回调方法
-         */
-        Utils.dynamicLoadJS = function (url, callback) {
-            throw new Error('未实现！');
-        };
-        /**
-         * 动态加载 css
-         * @memberof THING.Utils
-         * @param {String|Array<string>} url css 文件路径
-         * @param {Function} callback 回调方法
-         */
-        Utils.dynamicLoadCSS = function (url, callback) {
-            throw new Error('未实现！');
-        };
-        /**
-         * 添加物体类型转换规则
-         * @param {String} type 物体类名
-         * @param {String} condition 转换条件, 比如使用 /name/ 进行正则表达式匹配，能匹配上的才能进行转换
-         * @param {String} params? 新类型默认创建参数, 在转换成新类型后，会成为替换创建参数列表
-         * @example
-         * 1. 我们想把 id 为 1 的物体转换成 '.Cabinet' 类型，则可以通过以下接口实现
-         *  THING.Utils.addCastType('Cabinet', '#1');
-         * 2. 我们想把名字包含 'spotLight' 的物体都转换成 '.Cabinet' 类型，则可以通过以下接口实现
-         *  THING.Utils.addCastType('Cabinet', /spotLight/);
-         * 调用之后在场景加载的过程中，符合条件的物体都会以指定的类型创建，场景加载完成后，此规则自动被清除
-         */
-        Utils.addCastType = function (type, condition, params) {
-            throw new Error('未实现！');
-        };
-        /**
-         * 删除物体类型转换规则
-         * @param {String} type 物体类名
-         * @param {String} condition 转换条件
-         * @param {String} params? 新类型默认创建参数
-         */
-        Utils.removeCastType = function (type, condition, params) {
-            throw new Error('未实现！');
-        };
-        /**
-         * 异步执行函数
-         * @param {Function} callback 回调函数
-         * @example
-         * THING.Utils.runAsync(function() {
-         *  // ...
-         * });
-         */
-        Utils.runAsync = function (callback) {
-            throw new Error('未实现！');
-        };
-        return Utils;
-    }());
-    //# sourceMappingURL=Utils.js.map
 
     /*
      * @Author: kekeqy
      * @Date: 2018-12-10 14:52:07
      * @LastEditors: kekeqy
-     * @LastEditTime: 2018-12-10 14:52:33
+     * @LastEditTime: 2019-01-14 16:48:34
      * @Description: 水面
      */
     var Water = /** @class */ (function (_super) {
         __extends(Water, _super);
-        function Water() {
-            var _this = _super.call(this) || this;
+        function Water(app) {
+            var _this = _super.call(this, app) || this;
             throw new Error('未实现！');
             return _this;
         }
         return Water;
     }(PointsBase));
-    //# sourceMappingURL=Water.js.map
 
     /*
      * @Author: kekeqy
      * @Date: 2018-12-10 16:18:40
      * @LastEditors: kekeqy
-     * @LastEditTime: 2018-12-10 16:20:43
+     * @LastEditTime: 2019-01-14 16:52:17
      * @Description: 3D场景内的嵌入网页，可以用于页面嵌入显示
      * @example
      * var webView = app.create({
@@ -57074,14 +57265,13 @@ TWEEN.Interpolation = {
      */
     var WebView = /** @class */ (function (_super) {
         __extends(WebView, _super);
-        function WebView() {
-            var _this = _super.call(this) || this;
+        function WebView(app) {
+            var _this = _super.call(this, app) || this;
             throw new Error('未实现！');
             return _this;
         }
         return WebView;
     }(BaseObject));
-    //# sourceMappingURL=WebView.js.map
 
     /*
      * @Author: kekeqy
@@ -57132,7 +57322,6 @@ TWEEN.Interpolation = {
         };
         return Flags;
     }());
-    //# sourceMappingURL=Flags.js.map
 
     /*
      * @Author: kekeqy
@@ -57151,7 +57340,6 @@ TWEEN.Interpolation = {
          */
         CameraType[CameraType["Orthographic"] = 1] = "Orthographic";
     })(exports.CameraType || (exports.CameraType = {}));
-    //# sourceMappingURL=CameraType.js.map
 
     /*
      * @Author: kekeqy
@@ -57174,7 +57362,6 @@ TWEEN.Interpolation = {
          */
         DragState[DragState["DragEnd"] = 2] = "DragEnd";
     })(exports.DragState || (exports.DragState = {}));
-    //# sourceMappingURL=DragState.js.map
 
     /*
      * @Author: kekeqy
@@ -57197,7 +57384,6 @@ TWEEN.Interpolation = {
          */
         LoopType[LoopType["PingPong"] = 2] = "PingPong";
     })(exports.LoopType || (exports.LoopType = {}));
-    //# sourceMappingURL=LoopType.js.map
 
     /*
      * @Author: kekeqy
@@ -57220,7 +57406,6 @@ TWEEN.Interpolation = {
          */
         AreaPickType[AreaPickType["NotRealTime"] = 2] = "NotRealTime";
     })(exports.AreaPickType || (exports.AreaPickType = {}));
-    //# sourceMappingURL=AreaPickType.js.map
 
     /*
      * @Author: kekeqy
@@ -57247,7 +57432,6 @@ TWEEN.Interpolation = {
          */
         SkyBox[SkyBox["SunCloud"] = 3] = "SunCloud";
     })(exports.SkyBox || (exports.SkyBox = {}));
-    //# sourceMappingURL=SkyBox.js.map
 
     /*
      * @Author: kekeqy
@@ -57274,7 +57458,6 @@ TWEEN.Interpolation = {
          */
         LevelType[LevelType["Floor"] = 3] = "Floor";
     })(exports.LevelType || (exports.LevelType = {}));
-    //# sourceMappingURL=LevelType.js.map
 
     /*
      * @Author: kekeqy
@@ -57669,7 +57852,6 @@ TWEEN.Interpolation = {
          */
         KeyType[KeyType["SingleQuote"] = 95] = "SingleQuote";
     })(exports.KeyType || (exports.KeyType = {}));
-    //# sourceMappingURL=KeyType.js.map
 
     /*
      * @Author: kekeqy
@@ -57708,7 +57890,6 @@ TWEEN.Interpolation = {
          */
         EventTag[EventTag["LevelBackOperation"] = 6] = "LevelBackOperation";
     })(exports.EventTag || (exports.EventTag = {}));
-    //# sourceMappingURL=EventTag.js.map
 
     /*
      * @Author: kekeqy
@@ -57895,19 +58076,18 @@ TWEEN.Interpolation = {
          */
         EventType[EventType["LeaveLevel"] = 49] = "LeaveLevel";
     })(exports.EventType || (exports.EventType = {}));
-    //# sourceMappingURL=EventType.js.map
 
     /*
      * @Author: kekeqy
      * @Date: 2018-12-11 12:27:54
      * @LastEditors: kekeqy
-     * @LastEditTime: 2018-12-11 12:29:47
+     * @LastEditTime: 2019-01-14 16:50:41
      * @Description: 门
      */
     var Door = /** @class */ (function (_super) {
         __extends(Door, _super);
-        function Door() {
-            var _this = _super.call(this) || this;
+        function Door(app) {
+            var _this = _super.call(this, app) || this;
             throw new Error('未实现！');
             return _this;
         }
@@ -57936,7 +58116,6 @@ TWEEN.Interpolation = {
         });
         return Door;
     }(Thing));
-    //# sourceMappingURL=Door.js.map
 
     /*
      * @Author: kekeqy
@@ -57951,7 +58130,6 @@ TWEEN.Interpolation = {
         }
         return ParticleEmitter;
     }());
-    //# sourceMappingURL=ParticleEmitter.js.map
 
     /*
      * @Author: kekeqy
@@ -57966,19 +58144,18 @@ TWEEN.Interpolation = {
         }
         return ParticleGroup;
     }());
-    //# sourceMappingURL=ParticleGroup.js.map
 
     /*
      * @Author: kekeqy
      * @Date: 2018-12-11 12:33:55
      * @LastEditors: kekeqy
-     * @LastEditTime: 2018-12-11 12:36:20
+     * @LastEditTime: 2019-01-14 16:58:24
      * @Description: 负责区域文本绘制
      */
     var TextRegion = /** @class */ (function (_super) {
         __extends(TextRegion, _super);
-        function TextRegion() {
-            var _this = _super.call(this) || this;
+        function TextRegion(app) {
+            var _this = _super.call(this, app) || this;
             throw new Error('未实现！');
             return _this;
         }
@@ -58023,115 +58200,108 @@ TWEEN.Interpolation = {
         };
         return TextRegion;
     }(BaseObject));
-    //# sourceMappingURL=TextRegion.js.map
 
     /*
      * @Author: kekeqy
      * @Date: 2018-12-11 12:36:56
      * @LastEditors: kekeqy
-     * @LastEditTime: 2018-12-11 12:36:59
+     * @LastEditTime: 2019-01-14 16:48:47
      * @Description: 几何物体基类
      */
     var ThingGeometry = /** @class */ (function (_super) {
         __extends(ThingGeometry, _super);
-        function ThingGeometry() {
-            var _this = _super.call(this) || this;
+        function ThingGeometry(app) {
+            var _this = _super.call(this, app) || this;
             throw new Error('未实现！');
             return _this;
         }
         return ThingGeometry;
     }(Thing));
-    //# sourceMappingURL=ThingGeometry.js.map
 
     /*
      * @Author: kekeqy
      * @Date: 2018-12-11 12:38:45
      * @LastEditors: kekeqy
-     * @LastEditTime: 2018-12-11 12:38:48
+     * @LastEditTime: 2019-01-14 16:51:01
      * @Description: 正方体
      */
     var Box = /** @class */ (function (_super) {
         __extends(Box, _super);
-        function Box() {
-            var _this = _super.call(this) || this;
+        function Box(app) {
+            var _this = _super.call(this, app) || this;
             throw new Error('未实现！');
             return _this;
         }
         return Box;
     }(ThingGeometry));
-    //# sourceMappingURL=Box.js.map
 
     /*
      * @Author: kekeqy
      * @Date: 2018-12-11 12:40:23
      * @LastEditors: kekeqy
-     * @LastEditTime: 2018-12-11 12:40:27
+     * @LastEditTime: 2019-01-14 16:49:10
      * @Description: 球体
      */
     var Sphere = /** @class */ (function (_super) {
         __extends(Sphere, _super);
-        function Sphere() {
-            var _this = _super.call(this) || this;
+        function Sphere(app) {
+            var _this = _super.call(this, app) || this;
             throw new Error('未实现！');
             return _this;
         }
         return Sphere;
     }(ThingGeometry));
-    //# sourceMappingURL=Sphere.js.map
 
     /*
      * @Author: kekeqy
      * @Date: 2018-12-11 12:41:58
      * @LastEditors: kekeqy
-     * @LastEditTime: 2018-12-11 12:42:00
+     * @LastEditTime: 2019-01-14 16:49:46
      * @Description: 平面
      */
     var Plane = /** @class */ (function (_super) {
         __extends(Plane, _super);
-        function Plane() {
-            var _this = _super.call(this) || this;
+        function Plane(app) {
+            var _this = _super.call(this, app) || this;
             throw new Error('未实现！');
             return _this;
         }
         return Plane;
     }(ThingGeometry));
-    //# sourceMappingURL=Plane.js.map
 
     /*
      * @Author: kekeqy
      * @Date: 2018-12-11 12:43:27
      * @LastEditors: kekeqy
-     * @LastEditTime: 2018-12-11 12:43:39
+     * @LastEditTime: 2019-01-14 16:50:52
      * @Description: 胶囊体
      */
     var Cylinder = /** @class */ (function (_super) {
         __extends(Cylinder, _super);
-        function Cylinder() {
-            var _this = _super.call(this) || this;
+        function Cylinder(app) {
+            var _this = _super.call(this, app) || this;
             throw new Error('未实现！');
             return _this;
         }
         return Cylinder;
     }(ThingGeometry));
-    //# sourceMappingURL=Cylinder.js.map
 
     /*
      * @Author: kekeqy
      * @Date: 2018-12-11 12:45:02
      * @LastEditors: kekeqy
-     * @LastEditTime: 2018-12-11 12:45:13
+     * @LastEditTime: 2019-01-14 16:48:59
      * @Description: 四面体
      */
     var Tetrahedron = /** @class */ (function (_super) {
         __extends(Tetrahedron, _super);
-        function Tetrahedron() {
-            var _this = _super.call(this) || this;
+        function Tetrahedron(app) {
+            var _this = _super.call(this, app) || this;
             throw new Error('未实现！');
             return _this;
         }
         return Tetrahedron;
     }(ThingGeometry));
-    //# sourceMappingURL=Tetrahedron.js.map
 
     /*
      * @Author: kekeqy
@@ -58149,7 +58319,6 @@ TWEEN.Interpolation = {
         }
         return LayerCollection;
     }(Selector));
-    //# sourceMappingURL=LayerCollection.js.map
 
     /*
      * @Author: kekeqy
@@ -58180,61 +58349,57 @@ TWEEN.Interpolation = {
         };
         return BaseLayerCollection;
     }(LayerCollection));
-    //# sourceMappingURL=BaseLayerCollection.js.map
 
     /*
      * @Author: kekeqy
      * @Date: 2018-12-11 14:06:17
      * @LastEditors: kekeqy
-     * @LastEditTime: 2018-12-11 14:06:19
+     * @LastEditTime: 2019-01-14 16:55:35
      * @Description: 层
      */
     var Layer = /** @class */ (function (_super) {
         __extends(Layer, _super);
-        function Layer() {
-            var _this = _super.call(this) || this;
+        function Layer(app) {
+            var _this = _super.call(this, app) || this;
             throw new Error('未实现！');
             return _this;
         }
         return Layer;
     }(BaseObject));
-    //# sourceMappingURL=Layer.js.map
 
     /*
      * @Author: kekeqy
      * @Date: 2018-12-11 14:13:40
      * @LastEditors: kekeqy
-     * @LastEditTime: 2018-12-11 14:13:43
+     * @LastEditTime: 2019-01-14 16:53:59
      * @Description: 指南针控件
      */
     var CompassControl = /** @class */ (function (_super) {
         __extends(CompassControl, _super);
-        function CompassControl(option) {
-            var _this = _super.call(this) || this;
+        function CompassControl(app, option) {
+            var _this = _super.call(this, app) || this;
             throw new Error('未实现！');
             return _this;
         }
         return CompassControl;
     }(BaseObject));
-    //# sourceMappingURL=CompassControl.js.map
 
     /*
      * @Author: kekeqy
      * @Date: 2018-12-11 14:10:03
      * @LastEditors: kekeqy
-     * @LastEditTime: 2018-12-11 14:10:06
+     * @LastEditTime: 2019-01-14 16:54:27
      * @Description: 指北针控件
      */
     var EarthCompass = /** @class */ (function (_super) {
         __extends(EarthCompass, _super);
-        function EarthCompass(option) {
-            var _this = _super.call(this, option) || this;
+        function EarthCompass(app, option) {
+            var _this = _super.call(this, app, option) || this;
             throw new Error('未实现！');
             return _this;
         }
         return EarthCompass;
     }(CompassControl));
-    //# sourceMappingURL=EarthCompass.js.map
 
     /*
      * @Author: kekeqy
@@ -58249,19 +58414,18 @@ TWEEN.Interpolation = {
         CornerType[CornerType["LeftTop"] = 2] = "LeftTop";
         CornerType[CornerType["LeftBottom"] = 3] = "LeftBottom";
     })(exports.CornerType || (exports.CornerType = {}));
-    //# sourceMappingURL=CornerType.js.map
 
     /*
      * @Author: kekeqy
      * @Date: 2018-12-11 14:27:05
      * @LastEditors: kekeqy
-     * @LastEditTime: 2018-12-11 14:33:09
+     * @LastEditTime: 2019-01-14 16:55:01
      * @Description: 根据底面和高度拔起的体
      */
     var GeoBuilding = /** @class */ (function (_super) {
         __extends(GeoBuilding, _super);
-        function GeoBuilding(options) {
-            var _this = _super.call(this) || this;
+        function GeoBuilding(app, options) {
+            var _this = _super.call(this, app) || this;
             throw new Error('未实现！');
             return _this;
         }
@@ -58277,37 +58441,35 @@ TWEEN.Interpolation = {
         });
         return GeoBuilding;
     }(BaseObject));
-    //# sourceMappingURL=GeoBuilding.js.map
 
     /*
      * @Author: kekeqy
      * @Date: 2018-12-11 14:34:16
      * @LastEditors: kekeqy
-     * @LastEditTime: 2018-12-11 14:37:06
+     * @LastEditTime: 2019-01-14 16:55:23
      * @Description: 地理线
      */
     var GeoLine = /** @class */ (function (_super) {
         __extends(GeoLine, _super);
-        function GeoLine(option) {
-            var _this = _super.call(this) || this;
+        function GeoLine(app, option) {
+            var _this = _super.call(this, app) || this;
             throw new Error('未实现！');
             return _this;
         }
         return GeoLine;
     }(BaseObject));
-    //# sourceMappingURL=GeoLine.js.map
 
     /*
      * @Author: kekeqy
      * @Date: 2018-12-11 14:38:05
      * @LastEditors: kekeqy
-     * @LastEditTime: 2018-12-11 14:59:13
+     * @LastEditTime: 2019-01-14 16:55:57
      * @Description: 地球组件创建入口
      */
     var Map = /** @class */ (function (_super) {
         __extends(Map, _super);
-        function Map(options) {
-            var _this = _super.call(this) || this;
+        function Map(app, options) {
+            var _this = _super.call(this, app) || this;
             throw new Error('未实现！');
             return _this;
         }
@@ -58371,25 +58533,23 @@ TWEEN.Interpolation = {
         };
         return Map;
     }(BaseObject));
-    //# sourceMappingURL=Map.js.map
 
     /*
      * @Author: kekeqy
      * @Date: 2018-12-11 14:49:50
      * @LastEditors: kekeqy
-     * @LastEditTime: 2018-12-11 14:49:52
+     * @LastEditTime: 2019-01-14 16:56:17
      * @Description: 地形图层
      */
     var TerrainLayer = /** @class */ (function (_super) {
         __extends(TerrainLayer, _super);
-        function TerrainLayer() {
-            var _this = _super.call(this) || this;
+        function TerrainLayer(app) {
+            var _this = _super.call(this, app) || this;
             throw new Error('未实现！');
             return _this;
         }
         return TerrainLayer;
     }(Layer));
-    //# sourceMappingURL=TerrainLayer.js.map
 
     /*
      * @Author: kekeqy
@@ -58407,19 +58567,18 @@ TWEEN.Interpolation = {
         }
         return UserLayerCollection;
     }(LayerCollection));
-    //# sourceMappingURL=UserLayerCollection.js.map
 
     /*
      * @Author: kekeqy
      * @Date: 2018-12-11 15:00:07
      * @LastEditors: kekeqy
-     * @LastEditTime: 2018-12-11 15:09:12
+     * @LastEditTime: 2019-01-14 16:56:34
      * @Description: 基础Layer能够添加各种对象
      */
     var ThingLayer = /** @class */ (function (_super) {
         __extends(ThingLayer, _super);
-        function ThingLayer(param) {
-            var _this = _super.call(this) || this;
+        function ThingLayer(app, param) {
+            var _this = _super.call(this, app) || this;
             throw new Error('未实现！');
             return _this;
         }
@@ -58432,25 +58591,23 @@ TWEEN.Interpolation = {
         };
         return ThingLayer;
     }(BaseObject));
-    //# sourceMappingURL=ThingLayer.js.map
 
     /*
      * @Author: kekeqy
      * @Date: 2018-12-11 15:09:42
      * @LastEditors: kekeqy
-     * @LastEditTime: 2018-12-11 15:12:36
+     * @LastEditTime: 2019-01-14 16:57:31
      * @Description: 倾斜摄影图层类
      */
     var Tile3dLayer = /** @class */ (function (_super) {
         __extends(Tile3dLayer, _super);
-        function Tile3dLayer(param) {
-            var _this = _super.call(this) || this;
+        function Tile3dLayer(app, param) {
+            var _this = _super.call(this, app) || this;
             throw new Error('未实现！');
             return _this;
         }
         return Tile3dLayer;
     }(BaseObject));
-    //# sourceMappingURL=Tile3dLayer.js.map
 
     /*
      * @Author: kekeqy
@@ -58495,34 +58652,31 @@ TWEEN.Interpolation = {
         });
         return TileLayerStyle;
     }());
-    //# sourceMappingURL=TileLayerStyle.js.map
 
     /*
      * @Author: kekeqy
      * @Date: 2018-12-11 15:17:50
      * @LastEditors: kekeqy
-     * @LastEditTime: 2018-12-11 15:24:22
+     * @LastEditTime: 2019-01-14 16:57:04
      * @Description: 瓦片图层类
      */
     var TileLayer = /** @class */ (function (_super) {
         __extends(TileLayer, _super);
-        function TileLayer(param) {
-            var _this = _super.call(this) || this;
+        function TileLayer(app, param) {
+            var _this = _super.call(this, app) || this;
             throw new Error('未实现！');
             return _this;
         }
         return TileLayer;
     }(BaseObject));
-    //# sourceMappingURL=TileLayer.js.map
 
     /*
      * @Author: kekeqy
      * @Date: 2018-12-07 14:05:14
      * @LastEditors: kekeqy
-     * @LastEditTime: 2019-01-09 18:22:50
+     * @LastEditTime: 2019-01-11 17:51:07
      * @Description: 模块导出类
      */
-    //# sourceMappingURL=Index.js.map
 
     exports.BaseObject = BaseObject;
     exports.BaseStyle = BaseStyle;

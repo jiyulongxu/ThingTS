@@ -1,3 +1,4 @@
+import { Matrix4 } from 'three';
 export declare class Utils {
     /**
      * 判断是否布尔值
@@ -16,38 +17,38 @@ export declare class Utils {
     /**
      * 判断是否空
      * @memberof THING.Utils
-     * @param {*} o js元素
+     * @param {*} value js元素
      * @return {boolean}
      */
-    static isNull(o: any): boolean;
+    static isNull(value: any): boolean;
     /**
      * 判断是否空白字符串
      * @memberof THING.Utils
-     * @param {*} o js元素
+     * @param {*} value js元素
      * @return {boolean}
      */
-    static isBlank(o: any): boolean;
+    static isBlank(value: any): boolean;
     /**
      * 判断是否空结构体
      * @memberof THING.Utils
-     * @param {*} o js元素
+     * @param {*} value js元素
      * @return {boolean}
      */
-    static isEmptyObj(o: any): boolean;
+    static isEmptyObj(value: any): boolean;
     /**
      * 判断是否空数组
      * @memberof THING.Utils
-     * @param {*} o js元素
+     * @param {*} value js元素
      * @return {boolean}
      */
-    static isEmptyArray(o: any): boolean;
+    static isEmptyArray(value: any): boolean;
     /**
      * 字符串转成小写
      * @memberof THING.Utils
-     * @param {string} s 字符串
+     * @param {string} value 字符串
      * @return {string}
      */
-    static toLowerCase(s: string): string;
+    static toLowerCase(value: string): string;
     /**
      * 成员键值全部转换成小写
      * @memberof THING.Utils
@@ -137,4 +138,40 @@ export declare class Utils {
      * });
      */
     static runAsync(callback: () => any): void;
+    static toMatrixElementsArray(martix: Matrix4): {
+        _00: number;
+        _01: number;
+        _02: number;
+        _03: number;
+        _10: number;
+        _11: number;
+        _12: number;
+        _13: number;
+        _20: number;
+        _21: number;
+        _22: number;
+        _23: number;
+        _30: number;
+        _31: number;
+        _32: number;
+        _33: number;
+    };
+    static elementsArrayToMatrix(martix: Matrix4, o: {
+        _00: number;
+        _01: number;
+        _02: number;
+        _03: number;
+        _10: number;
+        _11: number;
+        _12: number;
+        _13: number;
+        _20: number;
+        _21: number;
+        _22: number;
+        _23: number;
+        _30: number;
+        _31: number;
+        _32: number;
+        _33: number;
+    }): void;
 }

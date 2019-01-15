@@ -1,3 +1,4 @@
+import './three/Index';
 export { BaseObject } from './base-object/BaseObject';
 export { BaseStyle } from './effect/BaseStyle';
 export { CameraController } from './camera/CameraController';
